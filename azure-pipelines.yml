@@ -1,10 +1,10 @@
 ### YamlMime:Yaml
-#ms.openlocfilehash: 004b706579010111499945b3a40a2c0bdd3e25c4
-#ms.sourcegitcommit: f3937681c3f6e310355071e1842967695e365751
-#ms.translationtype: HT
-#ms.contentlocale: ru-RU
-#ms.lasthandoff: 10/29/2021
-#ms.locfileid: "130739055"
+ms.openlocfilehash: e79fffb320d23a918d21b6559400bc0bc31263fc
+ms.sourcegitcommit: f3937681c3f6e310355071e1842967695e365751
+ms.translationtype: HT
+ms.contentlocale: ru-RU
+ms.lasthandoff: 10/29/2021
+ms.locfileid: "130739055"
 trigger:
 - '*'
 variables:
@@ -118,26 +118,25 @@ stages:
               azureSubscription: Resource Manager - Tailspin - Space Game
               appName: $(WebAppNameTest)
               package: $(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip
-              - stage: Staging
-              displayName: Deploy to the staging environment
-              dependsOn: Test
-              jobs:
-              - deployment: Deploy
-                pool:
-                  vmImage: ubuntu-20.04
-                environment: staging
-                variables:
-                - group: Release
-                strategy:
-                  runOnce:
-                    deploy:
-                      steps:
-                      - download: current
-                        artifact: drop
-                      - task: AzureWebApp@1
-                        displayName: 'Azure App Service Deploy: website'
-                        inputs:
-                          azureSubscription: Resource Manager - Tailspin - Space Game
-                          appName: $(WebAppNameStaging)
-                          package: $(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip
-                        
+- stage: Staging
+  displayName: Deploy to the staging environment
+  dependsOn: Test
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: ubuntu-20.04
+    environment: staging
+    variables:
+    - group: Release
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+          - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: website'
+            inputs:
+              azureSubscription: Resource Manager - Tailspin - Space Game
+              appName: $(WebAppNameStaging)
+              package: $(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip
